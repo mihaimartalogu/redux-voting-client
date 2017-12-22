@@ -5,19 +5,6 @@ import reducer from '../src/reducer';
 
 describe('reducer', () => {
 
-  it('handles SET_CLIENT_ID', () => {
-    const initialState = Map();
-    const action = {
-      type: 'SET_CLIENT_ID',
-      clientId: '1234'
-    };
-    const nextState = reducer(initialState, action);
-
-    expect(nextState).to.equal(fromJS({
-      clientId: '1234'
-    }));
-  });
-  
   it('handles SET_STATE', () => {
     const initialState = Map();
     const action = {
@@ -39,6 +26,7 @@ describe('reducer', () => {
     }));
   });
 
+
   it('handles SET_STATE with plain JS payload', () => {
     const initialState = Map();
     const action = {
@@ -51,7 +39,7 @@ describe('reducer', () => {
       }
     };
     const nextState = reducer(initialState, action);
-
+  
     expect(nextState).to.equal(fromJS({
       vote: {
         pair: ['Trainspotting', '28 Days Later'],
@@ -71,7 +59,7 @@ describe('reducer', () => {
       }
     };
     const nextState = reducer(undefined, action);
-
+  
     expect(nextState).to.equal(fromJS({
       vote: {
         pair: ['Trainspotting', '28 Days Later'],
@@ -80,79 +68,68 @@ describe('reducer', () => {
     }));
   });
 
-  it('handles VOTE by setting myVote', () => {
+
+  it('handles VOTE by setting hasVoted', () => {
     const state = fromJS({
       vote: {
-        round: 42,
         pair: ['Trainspotting', '28 Days Later'],
         tally: {Trainspotting: 1}
       }
     });
     const action = {type: 'VOTE', entry: 'Trainspotting'};
     const nextState = reducer(state, action);
-
+  
     expect(nextState).to.equal(fromJS({
       vote: {
-        round: 42,
         pair: ['Trainspotting', '28 Days Later'],
         tally: {Trainspotting: 1}
       },
-      myVote: {
-        round: 42,
-        entry: 'Trainspotting'
-      }
+      hasVoted: 'Trainspotting'
     }));
   });
 
-  it('does not set myVote for VOTE on invalid entry', () => {
+  it('does not set hasVoted for VOTE on invalid entry', () => {
     const state = fromJS({
       vote: {
-        round: 42,
         pair: ['Trainspotting', '28 Days Later'],
         tally: {Trainspotting: 1}
       }
     });
     const action = {type: 'VOTE', entry: 'Sunshine'};
     const nextState = reducer(state, action);
-
+  
     expect(nextState).to.equal(fromJS({
       vote: {
-        round: 42,
         pair: ['Trainspotting', '28 Days Later'],
         tally: {Trainspotting: 1}
       }
     }));
   });
 
-  it('removes myVote on SET_STATE if round has changed', () => {
+  it('removes hasVoted on SET_STATE if pair changes', () => {
     const initialState = fromJS({
       vote: {
-        round: 42,
         pair: ['Trainspotting', '28 Days Later'],
         tally: {Trainspotting: 1}
       },
-      myVote: {
-        round: 42,
-        entry: 'Trainspotting'
-      }
+      hasVoted: 'Trainspotting'
     });
     const action = {
       type: 'SET_STATE',
       state: {
         vote: {
-          round: 43,
-          pair: ['Sunshine', 'Trainspotting']
+          pair: ['Sunshine', 'Slumdog Millionaire']
         }
       }
     };
     const nextState = reducer(initialState, action);
-
+  
     expect(nextState).to.equal(fromJS({
       vote: {
-        round: 43,
-        pair: ['Sunshine', 'Trainspotting']
+        pair: ['Sunshine', 'Slumdog Millionaire']
       }
     }));
   });
+
 
 });

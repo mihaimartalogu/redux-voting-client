@@ -1,14 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {
   renderIntoDocument,
   scryRenderedDOMComponentsWithClass,
   Simulate
-} from 'react-addons-test-utils';
+} from 'react-dom/test-utils';
 import {List, Map} from 'immutable';
 import {Results} from '../../src/components/Results';
 import {expect} from 'chai';
-
+import ReactDOM from 'react-dom';
 
 
 describe('Results', () => {
@@ -29,9 +28,9 @@ describe('Results', () => {
     expect(days).to.contain('0');
   });
 
-  it('invokes action callback when next button is clicked', () => {
+  it('invokes the next callback when next button is clicked', () => {
     let nextInvoked = false;
-    function next() { nextInvoked = true; }
+    const next = () => nextInvoked = true;
 
     const pair = List.of('Trainspotting', '28 Days Later');
     const component = renderIntoDocument(
@@ -44,19 +43,6 @@ describe('Results', () => {
     expect(nextInvoked).to.equal(true);
   });
 
-  it('invokes action callback when restart button is clicked', () => {
-    let restartInvoked = false;
-    const pair = List.of('Trainspotting', '28 Days Later');
-    const component = renderIntoDocument(
-      <Results pair={pair}
-               tally={Map()}
-               restart={() => restartInvoked = true}/>
-    );
-    Simulate.click(ReactDOM.findDOMNode(component.refs.restart));
-
-    expect(restartInvoked).to.equal(true);
-  });
-
   it('renders the winner when there is one', () => {
     const component = renderIntoDocument(
       <Results winner="Trainspotting"
@@ -67,5 +53,6 @@ describe('Results', () => {
     expect(winner).to.be.ok;
     expect(winner.textContent).to.contain('Trainspotting');
   });
+  
 
 });
